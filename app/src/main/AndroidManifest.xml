@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".FileDetail"
+            android:label="@string/title_activity_file_detail" >
+        </activity>
     </application>
 
 </manifest>
