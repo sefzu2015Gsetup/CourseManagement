@@ -3,9 +3,11 @@ package com.example.sxq.coursemanagementdemo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -14,16 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 这个页面时刚进去的页面，数据展示在下一个，这个你不用管。
+ * 这个页面时刚进去的页面，也就是提供文件列表的页面，导入excel到数据库中我会在这里编写逻辑。
+ * 这个你不需要操作，你要写代码的文件在FileDetail
  */
 public class MainActivity extends Activity {
 
     //声明文件列表
     private List<File> fileList = new ArrayList<File>();
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         initFiles();//初始化文件数据
         FileAdapter fileAdapter = new FileAdapter(MainActivity.this,R.layout.list_item,fileList);
@@ -32,8 +36,8 @@ public class MainActivity extends Activity {
         fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this,"sxq",Toast.LENGTH_SHORT).show();
-                Intent openFileDetail = new Intent(MainActivity.this,FileDetail.class);
+                Log.i(TAG,"Click sxq!");
+                Intent openFileDetail = new Intent(MainActivity.this, FileDetail.class);
                 startActivity(openFileDetail);
             }
         });
@@ -45,27 +49,7 @@ public class MainActivity extends Activity {
         fileList.add(excel);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 

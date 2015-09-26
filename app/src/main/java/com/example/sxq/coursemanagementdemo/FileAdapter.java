@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * Created by sxq on 2015/9/24.
+ * 这是自定义的文件适配器，是刚进程序的页面中的ListView用来加载的适配器，也就是自定义列表项每行的布局，比如这里有图标，文件名，及箭头。
+ * 这个你不需要操作，你要写代码的文件在FileDetail
  */
 public class FileAdapter extends ArrayAdapter<File> {
     private  int resourceId;
