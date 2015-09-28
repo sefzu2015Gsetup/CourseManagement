@@ -13,6 +13,9 @@ public class File {
         this.name = name;
         this.imageId = imageId;
     }
+
+
+
     public String getName(){
         return name;
     }
