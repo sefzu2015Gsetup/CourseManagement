@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +44,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.i(TAG,"Click sxq!");
-                Intent openFileDetail = new Intent(MainActivity.this, FileDetail.class);
+                Intent openFileDetail = new Intent(MainActivity.this, FileDetailActivity.class);
                 startActivity(openFileDetail);
             }
         });
@@ -55,10 +52,17 @@ public class MainActivity extends Activity {
     }
 
     private void initFiles() {
+        //添加静态数据
         File excel = new File("2015上学期计算机科学与技术 开课计划书(静态数据）",R.drawable.ic_file_excel);
         fileList.add(excel);
-        //测试是否能打开指定文件
-        ReadExcel.readExcel(filePath);
+        //提取打开Excel文件的路径，截取文件名部分，添加到文件列表中显示。
+        String [] fileNames = filePath.split("/");
+        File excel2 = new File(fileNames[fileNames.length-1],R.drawable.ic_file_excel);
+        fileList.add(excel2);
+        //获取Excel数据
+        Bundle excelData = ReadExcel.readExcel(filePath);
+
+
     }
 
 

@@ -27,7 +27,7 @@ import java.util.List;
  * 以上这些都需要你通过数据库动态的赋值，目前我完成的只是静态。
  * 还有，监听点击事件，滚轮滑动事件等我还没重写，这部分影响不大，你先尝试着完成数据库数据的展示。
  */
-public class FileDetail extends Activity {
+public class FileDetailActivity extends Activity {
 
     private ImageButton btnBackMain;
     private TextView excelTitle;
@@ -38,7 +38,7 @@ public class FileDetail extends Activity {
     private List<Groups> groupData = new ArrayList<Groups>();
     // 放子列表列表数据
     private List<List<Childs>> childData = new ArrayList<List<Childs>>();
-    private static final String TAG = "FileDetail";
+    private static final String TAG = "FileDetailActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class FileDetail extends Activity {
         });
         //开始初始化数据
         initDatas();
-        adapter = new expandAdapter(FileDetail.this);
+        adapter = new expandAdapter(FileDetailActivity.this);
         ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.excelContent);
         expandableListView.setGroupIndicator(null);
         expandableListView.setAdapter(adapter);

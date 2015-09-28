@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FileDetail"
+            android:name=".FileDetailActivity"
             android:label="@string/title_activity_file_detail" >
         </activity>
     </application>

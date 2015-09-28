@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:orientation="vertical"
     android:background="#dcdcdc"
-    tools:context="com.example.sxq.coursemanagementdemo.FileDetail">
+    tools:context="com.example.sxq.coursemanagementdemo.FileDetailActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
