@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
@@ -61,25 +62,45 @@ public class FileDetailActivity extends Activity {
     }
     //初始化数据,从数据库中拿取数据后在这个方法里进行赋值展示
     private void initDatas() {
-        //父列表的赋值，一共两个，分别是两个列名对应的每行的单元格内的内容，在这里既是课程名称和学时对应的每行的数据。
-        Groups row1 = new Groups(" Internet技术与协议分析实验","24");
-        groupData.add(row1);
-        groupData.add(row1);
-
-        //子列表赋值，即详细数据展示，也就是每行的各个单元格内容都要展示，如课程名称，专业，选修类型等等。
-        List<Childs> child1 = new ArrayList<Childs>();
-        Childs child1V = new Childs();
-        child1V.setCourseName("Internet技术与协议分析实验");
-        child1V.setZhuanYe("数学与计算机科学");
-        child1V.setXuanXiuType("实践选修");
-        child1V.setZhuanYeNumber("187");
-        child1V.setGrade("13级");
-        child1V.setCredit("2");
-        child1V.setTime("48");
-
-        child1.add(child1V);
-        childData.add(child1);
-        childData.add(child1);
+        Bundle bundle = getIntent().getBundleExtra("excel");
+        int hang=bundle.getInt("hang");
+        int lie = bundle.getInt("lie");
+        int i;
+        for(i=0;i<hang;i++) {
+            String s1 = "group"+i;
+            Groups row = new Groups(bundle.getString(s1+3), bundle.getString(s1+6));
+            groupData.add(row);
+            List<Childs> child1 = new ArrayList<Childs>();
+            Childs child1V = new Childs();
+            child1V.setCourseName(bundle.getString(s1+3));
+            child1V.setZhuanYe(bundle.getString(s1+1));
+            child1V.setXuanXiuType(bundle.getString(s1+4));
+            child1V.setZhuanYeNumber(bundle.getString(s1+2));
+            child1V.setGrade(bundle.getString(s1+0));
+            child1V.setCredit(bundle.getString(s1+6));
+            child1V.setTime(bundle.getString(s1+5));
+            child1.add(child1V);
+            childData.add(child1);
+        }
+//        //父列表的赋值，一共两个，分别是两个列名对应的每行的单元格内的内容，在这里既是课程名称和学时对应的每行的数据。
+//        Groups row1 = new Groups(" Internet技术与协议分析实验","24");
+//        groupData.add(row1);
+//        groupData.add(row1);
+//
+//        //子列表赋值，即详细数据展示，也就是每行的各个单元格内容都要展示，如课程名称，专业，选修类型等等。
+//        List<Childs> child1 = new ArrayList<Childs>();
+//        Childs child1V = new Childs();
+//        child1V.setCourseName("Internet技术与协议分析实验");
+//        child1V.setZhuanYe("数学与计算机科学");
+//        child1V.setXuanXiuType("实践选修");
+//        child1V.setZhuanYeNumber("187");
+//        child1V.setGrade("13级");
+//        child1V.setCredit("2");
+//        child1V.setTime("48");
+//
+//        child1.add(child1V);
+//        childData.add(child1);
+//        childData.add(child1);
     }
 
     //自定义扩展适配器，ExpandableListView加载布局需要用到.
