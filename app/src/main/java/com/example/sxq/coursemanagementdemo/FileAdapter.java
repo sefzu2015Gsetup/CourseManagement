@@ -15,10 +15,10 @@ import java.util.List;
  * 这是自定义的文件适配器，是刚进程序的页面中的ListView用来加载的适配器，也就是自定义列表项每行的布局，比如这里有图标，文件名，及箭头。
  * 这个你不需要操作，你要写代码的文件在FileDetail
  */
-public class FileAdapter extends ArrayAdapter<File> {
+public class FileAdapter extends ArrayAdapter<Files> {
     private  int resourceId;
 
-    public FileAdapter(Context context, int textViewResourceId, List<File> objects) {
+    public FileAdapter(Context context, int textViewResourceId, List<Files> objects) {
         super(context, textViewResourceId, objects);
         this.resourceId = textViewResourceId;
 
@@ -26,7 +26,7 @@ public class FileAdapter extends ArrayAdapter<File> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        File file = getItem(position);
+        Files file = getItem(position);
         View view;
         viewHolder viewHolder;
         if(convertView == null){
