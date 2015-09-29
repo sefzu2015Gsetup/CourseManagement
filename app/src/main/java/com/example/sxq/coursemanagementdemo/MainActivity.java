@@ -2,6 +2,7 @@ package com.example.sxq.coursemanagementdemo;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -65,17 +66,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         }
     }
 
-    private void queryDatabase() {
+    private Bundle queryDatabase() {
+        Bundle bundle =new Bundle();
         DbTools db = new DbTools(MainActivity.this,"ExcelData",null,1);
         SQLiteDatabase dbReader = db.getReadableDatabase();
 //        Log.i(TAG,dbReader.getPath());
         Cursor cursor = dbReader.query("Excel", null, null, null, null, null, null);
+        int j=0;
+        int i=0;
         for (;cursor.moveToNext();){
-            for (int i=0;i<columns.length;i++){
-                Log.d(TAG,cursor.getString(cursor.getColumnIndex(columns[i])));
+            for (i=0;i<columns.length;i++){
+                bundle.putString("group"+j+i,cursor.getString(cursor.getColumnIndex(columns[i])));
+//                Log.d(TAG,cursor.getString(cursor.getColumnIndex(columns[i])));
             }
-
+            j++;
         }
+        bundle.putInt("hang",j);
+        bundle.putInt("lie",i);
+        return bundle;
     }
 
     private void initDatabase(Bundle data) {
@@ -93,7 +101,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             insertData.clear();
         }
         //查询数据库数据
-        queryDatabase();
+        Bundle bundle = queryDatabase();
+        Intent intent =new Intent(MainActivity.this,FileDetailActivity.class);
+        intent.putExtra("excel",bundle);
+        startActivity(intent);
     }
 
     //文件列表页面跳转到文件详情，逻辑待写
