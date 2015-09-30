@@ -3,10 +3,10 @@ package com.example.sxq.coursemanagementdemo;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * 这个页面时刚进去的页面，也就是提供文件列表的页面，导入excel到数据库中我会在这里编写逻辑。
- * 这个你不需要操作，你要写代码的文件在FileDetail
+ *
  */
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
@@ -26,21 +26,23 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private static final String TAG = "MainActivity";
     private String filePath;
     private String fileName;
-    private String[] columns = new String[]{"grade", "zhuanYe", "zhuanyeNumber", "courseName", "xuanXiuType", "credit", "time", "experimentTime", "computerTime", "startEnd", "teacher", "tip"};
+    private String[] columns = new String[]{"grade", "zhuanYe", "zhuanyeNumber", "courseName",
+            "xuanXiuType", "credit", "time", "experimentTime", "computerTime", "startEnd", "teacher", "tip"};
+    private SharedPreferences recentFile;
+    private SharedPreferences.Editor recentFileEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
+        recentFile = getPreferences(MODE_PRIVATE);
+        recentFileEdit = recentFile.edit();
         //获取打开次软件的方式
         if (getIntent().getData() != null) {
             //通过点击文件打开次软件，获取文件的路径
             filePath = getIntent().getData().getPath();
         } else {
-            //直接打开此软件，设置默认的文件路径
-//            filePath = new String("/mnt/sdcard/tencent/QQfile_recv/计算机 1.xls");
             filePath = null;
         }
         initFiles();//初始化文件列表
@@ -61,24 +63,38 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             fileName = fileNames[fileNames.length - 1];
             Files excel2 = new Files(fileName, R.drawable.ic_file_excel);
             fileList.add(excel2);
+            //记录最近打开的文件
+            recentFileEdit.putString("recentFile",fileName);
+            recentFileEdit.commit();
             //获取Excel数据
             Bundle excelData = ReadExcel.readExcel(filePath);
             //导入数据到数据库
             initDatabase(excelData);
+        }else if (recentFile.getString("recentFile",null) != null){
+            Files excel2 = new Files(recentFile.getString("recentFile",null), R.drawable.ic_file_excel);
+            fileList.add(excel2);
         }
     }
 
-    private void queryDatabase() {
-        DbTools db = new DbTools(MainActivity.this, "ExcelData", null, 1);
+
+    private Bundle queryDatabase() {
+        Bundle bundle =new Bundle();
+        DbTools db = new DbTools(MainActivity.this,"ExcelData.db",null,1);
         SQLiteDatabase dbReader = db.getReadableDatabase();
 //        Log.i(TAG,dbReader.getPath());
         Cursor cursor = dbReader.query("Excel", null, null, null, null, null, null);
-        for (; cursor.moveToNext(); ) {
-            for (int i = 0; i < columns.length; i++) {
-                Log.d(TAG, cursor.getString(cursor.getColumnIndex(columns[i])));
+        int j=0;
+        int i=0;
+        for (;cursor.moveToNext();){
+            for (i=0;i<columns.length;i++){
+                bundle.putString("group"+j+i,cursor.getString(cursor.getColumnIndex(columns[i])));
+//                Log.d(TAG,cursor.getString(cursor.getColumnIndex(columns[i])));
             }
-
+            j++;
         }
+        bundle.putInt("hang",j);
+        bundle.putInt("lie",i);
+        return bundle;
     }
 
     private void initDatabase(Bundle data) {
@@ -103,14 +119,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 insertData.clear();
             }
         }
-        //查询数据库数据
-//        queryDatabase();
     }
 
     //点击文件列表页面跳转到文件详情
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Log.i(TAG, "Click sxq!");
+//        Log.i(TAG, "Click sxq!");
         Intent openFileDetail = new Intent(MainActivity.this, FileDetailActivity.class);
         switch (i) {
             case 0:
@@ -119,6 +133,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             case 1:
                 openFileDetail.putExtra("isStaticDatas", false);
                 openFileDetail.putExtra("excelTitle",fileName);
+                //查询数据库数据
+                Bundle bundle = queryDatabase();
+                openFileDetail.putExtra("excel", bundle);
                 break;
             default:
                 break;

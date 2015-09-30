@@ -3,7 +3,7 @@ package com.example.sxq.coursemanagementdemo;
 /**
  * Created by sxq on 2015/9/26.
  * 这是子列表对象，包含多个属性，也就是excel表格中所有的列，在展开的子列表里要详细展示的数据。
- * 这个你不需要操作，你要写代码的文件在FileDetail
+ *
  */
 public class Childs {
     private String courseName = new String("课程名称：");

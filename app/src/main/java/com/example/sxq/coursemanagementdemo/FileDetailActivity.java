@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
@@ -88,7 +89,29 @@ public class FileDetailActivity extends Activity {
             //显示计算机 1.xls数据，从数据库中拿取
             excelTitle = (TextView) findViewById(R.id.excelTitle);
             excelTitle.setText(getIntent().getStringExtra("excelTitle"));
+            Bundle bundle = getIntent().getBundleExtra("excel");
+            int hang=bundle.getInt("hang");
+            int lie = bundle.getInt("lie");
+            int i;
+            for(i=0;i<hang;i++) {
+                String s1 = "group"+i;
+                Groups row = new Groups(bundle.getString(s1+3), bundle.getString(s1+6));
+                groupData.add(row);
+                List<Childs> child1 = new ArrayList<Childs>();
+                Childs child1V = new Childs();
+                child1V.setCourseName(bundle.getString(s1+3));
+                child1V.setZhuanYe(bundle.getString(s1+1));
+                child1V.setXuanXiuType(bundle.getString(s1+4));
+                child1V.setZhuanYeNumber(bundle.getString(s1+2));
+                child1V.setGrade(bundle.getString(s1+0));
+                child1V.setCredit(bundle.getString(s1+5));
+                child1V.setTime(bundle.getString(s1+6));
+                child1V.setOtherTime(bundle.getString(s1+7)+" "+bundle.getString(s1+8));
+                child1.add(child1V);
+                childData.add(child1);
+            }
         }
+
     }
 
     /**
