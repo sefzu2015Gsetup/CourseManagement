@@ -10,13 +10,14 @@ import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *这个页面就是来展示数据库数据的，你需要把数据库的数据展示在这里，尽量先看懂代码，不行的话要看懂initDatas()方法的使用，
+ * 这个页面就是来展示数据库数据的，你需要把数据库的数据展示在这里，尽量先看懂代码，不行的话要看懂initDatas()方法的使用，
  * 你数据的展示就是在这个方法中进行操作的，其他与页面组件的绑定等我都写好了。
  * 展示数据的组件基本都是TextView,你要学会用setText()方法。下面是你要展示数据用到的TextView。
  * excelTitle:就是标题，如 2015上学期计算机科学与技术 开课计划书
@@ -59,41 +60,54 @@ public class FileDetailActivity extends Activity {
         expandableListView.setGroupIndicator(null);
         expandableListView.setAdapter(adapter);
     }
+
     //初始化数据,从数据库中拿取数据后在这个方法里进行赋值展示
     private void initDatas() {
-        //父列表的赋值，一共两个，分别是两个列名对应的每行的单元格内的内容，在这里既是课程名称和学时对应的每行的数据。
-        Groups row1 = new Groups(" Internet技术与协议分析实验","24");
-        groupData.add(row1);
-        groupData.add(row1);
+        //显示静态数据
+        if (getIntent().getBooleanExtra("isStaticDatas", true)) {
+            //父列表的赋值，一共两个，分别是两个列名对应的每行的单元格内的内容，在这里既是课程名称和学时对应的每行的数据。
+            Groups row1 = new Groups(" Internet技术与协议分析实验", "24");
+            groupData.add(row1);
+            groupData.add(row1);
 
-        //子列表赋值，即详细数据展示，也就是每行的各个单元格内容都要展示，如课程名称，专业，选修类型等等。
-        List<Childs> child1 = new ArrayList<Childs>();
-        Childs child1V = new Childs();
-        child1V.setCourseName("Internet技术与协议分析实验");
-        child1V.setZhuanYe("数学与计算机科学");
-        child1V.setXuanXiuType("实践选修");
-        child1V.setZhuanYeNumber("187");
-        child1V.setGrade("13级");
-        child1V.setCredit("2");
-        child1V.setTime("48");
+            //子列表赋值，即详细数据展示，也就是每行的各个单元格内容都要展示，如课程名称，专业，选修类型等等。
+            List<Childs> child1 = new ArrayList<Childs>();
+            Childs child1V = new Childs();
+            child1V.setCourseName("Internet技术与协议分析实验");
+            child1V.setZhuanYe("数学与计算机科学");
+            child1V.setXuanXiuType("实践选修");
+            child1V.setZhuanYeNumber("187");
+            child1V.setGrade("13级");
+            child1V.setCredit("2");
+            child1V.setTime("48");
 
-        child1.add(child1V);
-        childData.add(child1);
-        childData.add(child1);
+            child1.add(child1V);
+            childData.add(child1);
+            childData.add(child1);
+        } else {
+            //显示计算机 1.xls数据，从数据库中拿取
+            excelTitle = (TextView) findViewById(R.id.excelTitle);
+            excelTitle.setText(getIntent().getStringExtra("excelTitle"));
+        }
     }
 
-    //自定义扩展适配器，ExpandableListView加载布局需要用到.
-    class expandAdapter extends BaseExpandableListAdapter{
+    /**
+     * 内部类，实现自定义扩展适配器，ExpandableListView加载布局需要用到.
+     */
+    class expandAdapter extends BaseExpandableListAdapter {
         Context context;
-        public expandAdapter(Context context){
+
+        public expandAdapter(Context context) {
             super();
             this.context = context;
         }
+
         //重写父列表项个数
         @Override
         public int getGroupCount() {
             return groupData.size();
         }
+
         //重写指定父列表项的子列表项个数
         @Override
         public int getChildrenCount(int groupPosition) {
@@ -104,6 +118,7 @@ public class FileDetailActivity extends Activity {
         public Object getGroup(int groupPosition) {
             return groupData.get(groupPosition);
         }
+
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             return childData.get(groupPosition).get(childPosition);
@@ -123,31 +138,39 @@ public class FileDetailActivity extends Activity {
         public boolean hasStableIds() {
             return true;
         }
+
         //父列表加载布局，并设置组件数据来源
         @Override
         public View getGroupView(int groupPosition, boolean b, View view, ViewGroup viewGroup) {
             GroupHolder groupHolder;
-            if (view == null){
-                view = LayoutInflater.from(context).inflate(R.layout.content_list_item,null);
+            if (view == null) {
+                view = LayoutInflater.from(context).inflate(R.layout.content_list_item, null);
                 groupHolder = new GroupHolder();
                 groupHolder.excelColumn1Value = (TextView) view.findViewById(R.id.excelColumn1Value);
                 groupHolder.excelColumn2Value = (TextView) view.findViewById(R.id.excelColumn2Value);
+                groupHolder.indicatorGroup = (ImageView) view.findViewById(R.id.btnGroup);
                 view.setTag(groupHolder);
-            }else {
+            } else {
                 groupHolder = (GroupHolder) view.getTag();
             }
 
             groupHolder.excelColumn1Value.setText(((Groups) getGroup(groupPosition)).getExcelColumn1Value());
             groupHolder.excelColumn2Value.setText(((Groups) getGroup(groupPosition)).getExcelColumn2Value());
+            if (b){
+                groupHolder.indicatorGroup.setImageResource(R.drawable.ic_action_hardware_keyboard_arrow_down);
+            }else {
+                groupHolder.indicatorGroup.setImageResource(R.drawable.ic_action_hardware_keyboard_arrow_right);
+            }
 
             return view;
         }
+
         //子列表加载布局，并设置组件数据来源
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean b, View view, ViewGroup viewGroup) {
             ChildHolder childHolder;
-            if (view == null){
-                view = LayoutInflater.from(context).inflate(R.layout.child_list_item,null);
+            if (view == null) {
+                view = LayoutInflater.from(context).inflate(R.layout.child_list_item, null);
                 childHolder = new ChildHolder();
                 childHolder.courseName = (TextView) view.findViewById(R.id.课程名称);
                 childHolder.zhuanYe = (TextView) view.findViewById(R.id.专业);
@@ -161,7 +184,7 @@ public class FileDetailActivity extends Activity {
                 childHolder.teacher = (TextView) view.findViewById(R.id.任课教师);
                 childHolder.tip = (TextView) view.findViewById(R.id.备注);
                 view.setTag(childHolder);
-            }else {
+            } else {
                 childHolder = (ChildHolder) view.getTag();
             }
 
@@ -184,23 +207,27 @@ public class FileDetailActivity extends Activity {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
+
     }
-    class GroupHolder{
+
+    class GroupHolder {
         TextView excelColumn1Value;
         TextView excelColumn2Value;
+        ImageView indicatorGroup;
     }
-    class ChildHolder{
-        TextView courseName ;
-        TextView zhuanYe ;
-        TextView xuanXiuType ;
-        TextView grade ;
-        TextView zhuanYeNumber ;
+
+    class ChildHolder {
+        TextView courseName;
+        TextView zhuanYe;
+        TextView xuanXiuType;
+        TextView grade;
+        TextView zhuanYeNumber;
         TextView credit;
-        TextView time ;
-        TextView otherTime ;
-        TextView startEnd ;
-        TextView teacher ;
-        TextView tip ;
+        TextView time;
+        TextView otherTime;
+        TextView startEnd;
+        TextView teacher;
+        TextView tip;
     }
 
 }

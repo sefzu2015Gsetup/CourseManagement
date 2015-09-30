@@ -44,7 +44,7 @@
         android:id="@+id/excelTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="2015上学期计算机科学与技术 开课计划书"
+        android:text="2015上学期计算机科学与技术(静态数据，测试样例）"
         android:gravity="center"
         android:background="#fff"/>
     <ImageView

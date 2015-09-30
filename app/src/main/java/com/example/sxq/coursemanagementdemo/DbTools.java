@@ -13,11 +13,10 @@ public class DbTools extends SQLiteOpenHelper{
     private static final String TAG = "DbTools";
     //创建计算机 1.xls表
     private static final String CREATE_EXCEL = "CREATE TABLE Excel ("
-            +"_id integer primary key autoincrement, "
             + "grade text, "
             + "zhuanYe text, "
             + "zhuanyeNumber text, "
-            + "courseName text, "
+            + "courseName text primary key, "
             + "xuanXiuType text, "
             + "credit text, "
             + "time text, "

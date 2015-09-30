@@ -17,28 +17,27 @@ public class ReadExcel {
     private static final String TAG = "ReadExcel";
 
     /**
-     *
      * @param filePath
      */
-    public static Bundle readExcel(String filePath){
+    public static Bundle readExcel(String filePath) {
         //返回的数据
         Bundle retDatas = new Bundle();
-        try{
+        try {
             Workbook book = Workbook.getWorkbook(new File(filePath));
             // 获得第一个工作表对象
             Sheet sheet = book.getSheet(0);
 
             Character columnId = 'A';
-            for (int i = 0; i < sheet.getColumns(); i++,columnId++) {
+            for (int i = 0; i < sheet.getColumns(); i++, columnId++) {
                 Cell[] cellColumn = sheet.getColumn(i);
 
-                for (int j = 0; j< cellColumn.length; j++){
-                    retDatas.putString(columnId+""+(j+1),cellColumn[j].getContents().toString());
+                for (int j = 0; j < cellColumn.length; j++) {
+                    retDatas.putString(columnId + "" + (j + 1), cellColumn[j].getContents().toString());
                 }
 
             }
 
-             book.close();
+            book.close();
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
